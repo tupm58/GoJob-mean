@@ -48,27 +48,7 @@ exports.create = function(req, res) {
   });
 
 
-
-  // fs.readFile(file.path,function (err, original_data) {
-  //   if(err){
-  //     return res.status(400).send({
-  //       message: errorHandler.getErrorMessage(err)
-  //     });
-  //   }
-  //   // save image in db as base64 encoded - this limits the image size
-  //   // to there should be size checks here and in client
-  //   var base64Image = original_data.toString('base64');
-  //   fs.unlink(file.path, function (err) {
-  //     if (err)
-  //     {
-  //       console.log('failed to delete ' + file.path);
-  //     }
-  //     else{
-  //       console.log('successfully deleted ' + file.path);
-  //     }
-  //   });
-  // });
-  // post.postImageURL = base64Image;
+  
 
 
 };
