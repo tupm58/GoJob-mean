@@ -8,10 +8,10 @@ var postsPolicy = require('../policies/posts.server.policy'),
 
 module.exports = function(app) {
   // Posts Routes
-  // app.route('/api/posts').all(postsPolicy.isAllowed)
-  app.route('/api/posts')
+  app.route('/api/posts').all(postsPolicy.isAllowed)
     .get(posts.list)
     .post(posts.create);
+    
 
   app.route('/api/posts/:postId').all(postsPolicy.isAllowed)
     .get(posts.read)

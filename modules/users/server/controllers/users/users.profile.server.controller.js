@@ -63,7 +63,6 @@ exports.changeProfilePicture = function (req, res) {
 
   // Filtering to upload only images
   upload.fileFilter = profileUploadFileFilter;
-
   if (user) {
     upload(req, res, function (uploadError) {
       if (uploadError) {
@@ -72,7 +71,6 @@ exports.changeProfilePicture = function (req, res) {
         });
       } else {
         user.profileImageURL = config.uploads.profileUpload.dest + req.file.filename;
-
         user.save(function (saveError) {
           if (saveError) {
             return res.status(400).send({

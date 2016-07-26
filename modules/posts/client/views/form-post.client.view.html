@@ -13,18 +13,18 @@
           </div>
         </div>
         <!--new-->
-        <!--<div class="form-group text-center">-->
-          <!--<img ng-src="{{vm.imageURL}}" alt="{{vm.user.displayName}}" class="img-thumbnail user-profile-picture">-->
-        <!--</div>-->
-        <!--<div class="text-center form-group" ng-hide="vm.uploader.queue.length">-->
-          <!--<span class="btn btn-default btn-file">-->
-              <!--Select Image <input type="file" nv-file-select uploader="vm.uploader">-->
-          <!--</span>-->
-        <!--</div>-->
-        <!--<div class="text-center form-group" ng-show="vm.uploader.queue.length">-->
-          <!--<button class="btn btn-primary" ng-click="vm.uploadProfilePicture();">Upload</button>-->
-          <!--<button class="btn btn-default" ng-click="vm.cancelUpload();">Cancel</button>-->
-        <!--</div>-->
+        <div class="form-group text-center">
+          <img ng-src="{{vm.imageURL}}" alt="{{vm.user.displayName}}" class="img-thumbnail user-profile-picture">
+        </div>
+        <div class="text-center form-group" ng-hide="vm.uploader.queue.length">
+          <span class="btn btn-default btn-file">
+              Select Image <input type="file" nv-file-select uploader="vm.uploader">
+          </span>
+        </div>
+        <div class="text-center form-group" ng-show="vm.uploader.queue.length">
+          <button class="btn btn-primary" ng-click="vm.uploadProfilePicture();">Upload</button>
+          <button class="btn btn-default" ng-click="vm.cancelUpload();">Cancel</button>
+        </div>
         <!--new-->
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.post._id ? 'Update' : 'Create'}}</button>

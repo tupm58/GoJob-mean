@@ -6,9 +6,9 @@
     .module('posts')
     .controller('PostsController', PostsController);
 
-  PostsController.$inject = ['$scope', '$state', 'Authentication', 'postResolve'];
+  PostsController.$inject = ['$scope', '$state', 'Authentication', 'postResolve','FileUploader'];
 
-  function PostsController ($scope, $state, Authentication, post) {
+  function PostsController ($scope, $state, Authentication, post,FileUploader) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -17,7 +17,27 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+    vm.imageURL = vm.post.postImageURL;
+  //  vm.uploadProfilePicture = uploadProfilePicture;
+    vm.cancelUpload = cancelUpload;
+    vm.uploader = new FileUploader({
+      url: 'api/posts',
+      alias: 'newPostPicture'
+    });
+    // Change user profile picture
+    function uploadProfilePicture() {
+      // Clear messages
+      vm.success = vm.error = null;
 
+      // Start upload
+      vm.uploader.uploadAll();
+    }
+
+    // Cancel the upload process
+    function cancelUpload() {
+      vm.uploader.clearQueue();
+      vm.imageURL = vm.user.profileImageURL;
+    }
     // Remove existing Post
     function remove() {
       if (confirm('Are you sure you want to delete?')) {
@@ -37,6 +57,7 @@
         vm.post.$update(successCallback, errorCallback);
       } else {
         vm.post.$save(successCallback, errorCallback);
+        uploadProfilePicture();
       }
 
       function successCallback(res) {

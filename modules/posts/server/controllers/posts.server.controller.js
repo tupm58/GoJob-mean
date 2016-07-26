@@ -3,52 +3,74 @@
 /**
  * Module dependencies.
  */
-var path = require('path'),
+var _ = require('lodash'),
+  path = require('path'),
   fs = require('fs'),
+  multer = require('multer'),
+  config = require(path.resolve('./config/config')),
+
   mongoose = require('mongoose'),
   Post = mongoose.model('Post'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
-
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
  * Create a Post
  */
 exports.create = function(req, res) {
-  var file = req.files.file;
   var post = new Post(req.body);
   post.user = req.user;
+  //post.postImageURL = "";
+  var upload = multer(config.uploads.postUpload).single('newPostPicture');
+  var postUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
 
-  fs.readFile(file.path,function (err, original_data) {
-    if(err){
+  upload.fileFilter = postUploadFileFilter;
+
+  upload(req, res,function (uploadError) {
+    if (uploadError){
       return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+        message: 'Error occurred while uploading profile picture'
+      });
+    }else{
+      console.log("day la " + req.file.filename);
+      post.postImageURL = config.uploads.postUpload.dest + req.file.filename;
+      console.log("day la 1 " + post.postImageURL);
+      console.log("1"+post);
+      post.save(function(err) {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.jsonp(post);
+        }
       });
     }
-    // save image in db as base64 encoded - this limits the image size
-    // to there should be size checks here and in client
-    var base64Image = original_data.toString('base64');
-    fs.unlink(file.path, function (err) {
-      if (err)
-      {
-        console.log('failed to delete ' + file.path);
-      }
-      else{
-        console.log('successfully deleted ' + file.path);
-      }
-    });
   });
-  post.postImageURL = base64Image;
 
-  post.save(function(err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.jsonp(post);
-    }
-  });
+
+
+  // fs.readFile(file.path,function (err, original_data) {
+  //   if(err){
+  //     return res.status(400).send({
+  //       message: errorHandler.getErrorMessage(err)
+  //     });
+  //   }
+  //   // save image in db as base64 encoded - this limits the image size
+  //   // to there should be size checks here and in client
+  //   var base64Image = original_data.toString('base64');
+  //   fs.unlink(file.path, function (err) {
+  //     if (err)
+  //     {
+  //       console.log('failed to delete ' + file.path);
+  //     }
+  //     else{
+  //       console.log('successfully deleted ' + file.path);
+  //     }
+  //   });
+  // });
+  // post.postImageURL = base64Image;
+
+
 };
 
 /**

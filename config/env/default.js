@@ -48,7 +48,7 @@ module.exports = {
     postUpload:{
       dest: './modules/posts/client/img/post/uploads/', // Post upload destination path
       limits: {
-        fileSize: 1 * 1024 * 1024 // Max file size in bytes (1 MB)
+        fileSize: 20 * 1024 * 1024 // Max file size in bytes (1 MB)
       }
     }
   }
