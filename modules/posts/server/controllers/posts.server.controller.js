@@ -127,7 +127,25 @@ exports.list = function(req, res) {
 
 //new
 exports.createComment = function (req,res) {
+  var postId = req.params.postId;
+  console.log(postId);
+  var comment = req.body;
+  comment.user = req.user;
 
+  console.log(comment);
+  Post.findById(postId,function (err,post) {
+    post.comments.push(comment);
+    post.save(function (err) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(post);
+      }
+    });
+  })
+ 
 }
 //new
 /**

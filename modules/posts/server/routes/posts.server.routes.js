@@ -18,7 +18,7 @@ module.exports = function(app) {
     .put(posts.update)
     .delete(posts.delete);
   
-  app.route('/api/posts/:postId/comments').all(postsPolicy.isAllowed)
+  app.route('/api/posts/:postId/comments')
     .post(posts.createComment)
   
   // Finish by binding the Post middleware

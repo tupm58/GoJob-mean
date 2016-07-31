@@ -30,7 +30,17 @@ var PostSchema = new Schema({
   postImageURL: {
     type: String,
     default: 'modules/users/client/img/profile/default.png'
-  }
+  },
+  comments: [{
+    commentContent: String,
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User'
+    }
+  }],
+  tags: [{
+    word: String 
+  }]
 });
 
 mongoose.model('Post', PostSchema);
