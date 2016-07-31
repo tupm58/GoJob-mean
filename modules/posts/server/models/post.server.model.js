@@ -16,7 +16,7 @@ var PostSchema = new Schema({
   postContent: {
     type: String,
     default: '',
-   // required: 'Please fill Post',
+    required: 'Please fill Post',
     trim: true
   },
   created: {
@@ -39,7 +39,7 @@ var PostSchema = new Schema({
     }
   }],
   tags: [{
-    word: String 
+    word: String
   }]
 });
 
