@@ -5,10 +5,10 @@
  */
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
-
 /**
  * Post Schema
  */
+
 var PostSchema = new Schema({
   title: {
     type: String
@@ -16,7 +16,7 @@ var PostSchema = new Schema({
   postContent: {
     type: String,
     default: '',
-    required: 'Please fill Post',
+   // required: 'Please fill Post',
     trim: true
   },
   created: {
@@ -28,8 +28,10 @@ var PostSchema = new Schema({
     ref: 'User'
   },
   postImageURL: {
-    type: String
+    type: String,
+    default: 'modules/users/client/img/profile/default.png'
   }
 });
 
 mongoose.model('Post', PostSchema);
+

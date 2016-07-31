@@ -17,7 +17,10 @@ module.exports = function(app) {
     .get(posts.read)
     .put(posts.update)
     .delete(posts.delete);
-
+  
+  app.route('/api/posts/:postId/comments').all(postsPolicy.isAllowed)
+    .post(posts.createComment)
+  
   // Finish by binding the Post middleware
   app.param('postId', posts.postByID);
 };

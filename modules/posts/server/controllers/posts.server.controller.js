@@ -17,38 +17,45 @@ var _ = require('lodash'),
  * Create a Post
  */
 exports.create = function(req, res) {
-  var post = new Post(req.body);
-  post.user = req.user;
-  //post.postImageURL = "";
+
   var upload = multer(config.uploads.postUpload).single('newPostPicture');
   var postUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
-
   upload.fileFilter = postUploadFileFilter;
 
   upload(req, res,function (uploadError) {
+    var post = new Post(req.body);
+    post.user = req.user;
     if (uploadError){
       return res.status(400).send({
         message: 'Error occurred while uploading profile picture'
       });
     }else{
-      console.log("day la " + req.file.filename);
-      post.postImageURL = config.uploads.postUpload.dest + req.file.filename;
-      console.log("day la 1 " + post.postImageURL);
-      console.log("1"+post);
-      post.save(function(err) {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.jsonp(post);
-        }
-      });
+      if (req.file){
+        post.postImageURL = config.uploads.postUpload.dest + req.file.filename;
+        post.save(function(err) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.jsonp(post);
+          }
+        });
+      }else {
+        post.save(function(err) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.jsonp(post);
+          }
+        });
+      }
     }
   });
 
 
-  
 
 
 };
@@ -118,6 +125,11 @@ exports.list = function(req, res) {
   });
 };
 
+//new
+exports.createComment = function (req,res) {
+
+}
+//new
 /**
  * Post middleware
  */
