@@ -28,15 +28,6 @@ var ArticleSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
-  },
-  comments: {
-      commentContent:{
-        type: String
-      },
-      user: {
-        type: Schema.ObjectId,
-        ref: 'User'
-      }
   }
 });
 

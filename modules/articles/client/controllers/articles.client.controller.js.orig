@@ -13,9 +13,9 @@
     vm.article = article;
     //vm.isNew = vm.article._id;
     vm.authentication = Authentication;
-    vm.user = vm.authentication.user;
     vm.error = null;
     vm.message = null;
+    //vm.isUpdating = $scope.isUpdating;
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
@@ -28,13 +28,15 @@
 
     Socket.on('articleUpdateError', function (response) {
       vm.error = response.message;
+      $scope.isUpdating = false;
       //TODO: Use ng-messages
     });
 
     Socket.on('articleUpdateSuccess', function (response) {
       if (vm.article && vm.article._id.toString() === response.data._id) {
         vm.article = response.data;
-        vm.message = response.message + ' by ' + (response.updatedBy !== vm.user.displayName ? response.updatedBy : 'You') + ' at ' + response.updatedAt;
+        vm.message = response.message;
+        $scope.isUpdating = false;
       }
     });
 
@@ -57,6 +59,7 @@
         // TODO: move create/update logic to service
         if (vm.article._id) {
           Socket.emit('articleUpdate', vm.article);
+          $scope.isUpdating = true;
         } else {
           Socket.emit('articleCreate', vm.article);
         }        
