@@ -6,9 +6,9 @@
     .module('posts')
     .controller('PostsController', PostsController);
 
-  PostsController.$inject = ['$scope', '$state', 'Authentication', 'postResolve','FileUploader'];
+  PostsController.$inject = ['$scope', '$state', 'Authentication', 'postResolve','FileUploader','Socket','$timeout'];
 
-  function PostsController ($scope, $state, Authentication, post,FileUploader) {
+  function PostsController ($scope, $state, Authentication, post,FileUploader,Socket,$timeout) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -25,13 +25,20 @@
       alias: 'newPostPicture' || null,
       formData : [vm.post]
     });
-
+    if (!Socket.socket && Authentication.user) {
+      Socket.connect();
+      console.log("connect");
+    }
     // Change user profile picture
     function uploadProfilePicture() {
       vm.success = vm.error = null;
       // Start upload
       vm.uploader.uploadAll();
+     // Socket.emit('postCreate',vm.post);
     }
+    Socket.on('post.created', function(post) {
+      console.log(post);
+    });
     // Cancel the upload process
     function cancelUpload() {
       vm.uploader.clearQueue();

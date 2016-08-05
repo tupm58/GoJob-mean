@@ -59,7 +59,9 @@
           Socket.emit('articleUpdate', vm.article);
         } else {
           Socket.emit('articleCreate', vm.article);
-        }        
+          console.log("connect 3");
+
+        }
       }, 2000);
     }
 
