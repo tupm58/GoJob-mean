@@ -36,9 +36,12 @@
       vm.uploader.uploadAll();
      // Socket.emit('postCreate',vm.post);
     }
+    //START
     Socket.on('post.created', function(post) {
       console.log(post);
     });
+    //END
+    
     // Cancel the upload process
     function cancelUpload() {
       vm.uploader.clearQueue();

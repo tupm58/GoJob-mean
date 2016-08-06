@@ -38,8 +38,10 @@ exports.create = function(req, res) {
               message: errorHandler.getErrorMessage(err)
             });
           } else {
+            //START
             var socketio = req.app.get('socketio');
             socketio.sockets.emit('post.created',post);
+            //END
             res.jsonp(post);
           }
         });
@@ -50,8 +52,10 @@ exports.create = function(req, res) {
               message: errorHandler.getErrorMessage(err)
             });
           } else {
+            //START
             var socketio = req.app.get('socketio');
             socketio.sockets.emit('post.created',post);
+            //END
             res.jsonp(post);
           }
         });
