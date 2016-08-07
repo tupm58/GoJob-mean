@@ -19,7 +19,7 @@
       console.log(post);
     });
     Socket.on('comment.created', function(post) {
-      console.log(post);
+      console.log(post.comments);
     });
     Socket.on('postCreateError', function (response) {
       vm.error = response.message;

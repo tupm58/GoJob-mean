@@ -129,7 +129,7 @@ exports.list = function(req, res) {
   });
 };
 
-//new
+// create Comment
 exports.createComment = function (req,res) {
   var postId = req.params.postId;
   console.log(postId);
@@ -145,8 +145,9 @@ exports.createComment = function (req,res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
+
         var socketio = req.app.get('socketio');
-        socketio.sockets.emit('comment.created',post);
+        socketio.sockets.emit('comment.created',post.comments);
         res.jsonp(post);
       }
     });
@@ -154,6 +155,37 @@ exports.createComment = function (req,res) {
 
 }
 //new
+
+//search post by tag
+exports.listPostByTag = function (req, res) {
+  // var tag = req.body;
+  // console.log(JSON.stringify(tag));
+  var tag = req.params.tag;
+  console.log(tag);
+  Post.find({$text: {$search: tag }})
+    .exec(function(err,posts){
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.jsonp(posts);
+      }
+    });
+  // Post.find(
+  //   { 'tags.word' : tag },
+  //   function (err,posts) {
+  //     if (err) {
+  //       return res.status(400).send({
+  //         message: errorHandler.getErrorMessage(err)
+  //       });
+  //     } else {
+  //       res.jsonp(posts);
+  //     }
+  // });
+}
+
+
 /**
  * Post middleware
  */

@@ -42,6 +42,7 @@ var PostSchema = new Schema({
     word: String
   }]
 });
+PostSchema.index({'tags.word': 'text'});
 
 mongoose.model('Post', PostSchema);
 
