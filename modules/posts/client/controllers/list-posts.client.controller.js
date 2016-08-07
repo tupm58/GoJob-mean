@@ -15,8 +15,11 @@
     if (!Socket.socket && Authentication.user) {
       Socket.connect();
     }
-    Socket.on('post.created', function() {
-      console.log("po");
+    Socket.on('post.created', function(post) {
+      console.log(post);
+    });
+    Socket.on('comment.created', function(post) {
+      console.log(post);
     });
     Socket.on('postCreateError', function (response) {
       vm.error = response.message;

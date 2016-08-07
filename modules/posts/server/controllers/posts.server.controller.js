@@ -145,6 +145,8 @@ exports.createComment = function (req,res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
+        var socketio = req.app.get('socketio');
+        socketio.sockets.emit('comment.created',post);
         res.jsonp(post);
       }
     });
