@@ -26,5 +26,16 @@ module.exports = function(app) {
 
   //  Search post by Tag
   app.route('/api/posts/search/:tag')
-    .post(posts.listPostByTag);
+    .post(posts.listPostByTag)
+
+  //  add category
+  app.route('/api/categories')
+    .get(posts.listCategory)
+    .post(posts.createCategory);
+
+  app.route('/api/categories/:categoryId')
+    .delete(posts.deleteCategory);
+
+  // Finish by binding the Post middleware
+  app.param('categoryId', posts.categoryByID);
 };

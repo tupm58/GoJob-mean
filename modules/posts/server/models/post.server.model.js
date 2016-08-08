@@ -40,6 +40,10 @@ var PostSchema = new Schema({
   }],
   tags: [{
     word: String
+  }],
+  category:[{
+    type: Schema.ObjectId,
+    ref: 'Category'
   }]
 });
 PostSchema.index({'tags.word': 'text'});

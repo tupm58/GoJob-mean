@@ -11,6 +11,7 @@ var _ = require('lodash'),
 
   mongoose = require('mongoose'),
   Post = mongoose.model('Post'),
+  Category = mongoose.model('Category'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
@@ -25,6 +26,9 @@ exports.create = function(req, res) {
   upload(req, res,function (uploadError) {
     var post = new Post(req.body);
     post.user = req.user;
+   // post.category = req.category;
+   // ĐOẠN NÀY !
+
     if (uploadError){
       return res.status(400).send({
         message: 'Error occurred while uploading profile picture'
@@ -172,17 +176,6 @@ exports.listPostByTag = function (req, res) {
         res.jsonp(posts);
       }
     });
-  // Post.find(
-  //   { 'tags.word' : tag },
-  //   function (err,posts) {
-  //     if (err) {
-  //       return res.status(400).send({
-  //         message: errorHandler.getErrorMessage(err)
-  //       });
-  //     } else {
-  //       res.jsonp(posts);
-  //     }
-  // });
 }
 
 
@@ -206,6 +199,66 @@ exports.postByID = function(req, res, next, id) {
       });
     }
     req.post = post;
+    next();
+  });
+};
+
+//create category
+exports.createCategory = function (req,res){
+  var category = new Category(req.body);
+  category.save(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(category);
+    }
+  });
+};
+
+exports.listCategory = function (req, res) {
+  Category.find().sort('-created').exec(function(err, posts) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(posts);
+    }
+  });
+}
+
+exports.deleteCategory = function(req,res){
+  var category = req.category ;
+
+  category.remove(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(category);
+    }
+  });
+};
+exports.categoryByID = function(req, res, next, id) {
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: 'category is invalid'
+    });
+  }
+
+  Category.findById(id).exec(function (err, category) {
+    if (err) {
+      return next(err);
+    } else if (!category) {
+      return res.status(404).send({
+        message: 'No Post with that identifier has been found'
+      });
+    }
+    req.category = category;
     next();
   });
 };
