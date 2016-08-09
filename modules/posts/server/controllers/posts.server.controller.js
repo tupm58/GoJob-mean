@@ -136,11 +136,9 @@ exports.list = function(req, res) {
 // create Comment
 exports.createComment = function (req,res) {
   var postId = req.params.postId;
-  console.log(postId);
   var comment = req.body;
   comment.user = req.user;
 
-  console.log(comment);
   Post.findById(postId,function (err,post) {
     post.comments.push(comment);
     post.save(function (err) {
@@ -156,17 +154,19 @@ exports.createComment = function (req,res) {
       }
     });
   })
-
-}
-//new
+};
+//delete comment
+// exports.deleteComment = function (req, res) {
+//
+// }
 
 //search post by tag
 exports.listPostByTag = function (req, res) {
-  // var tag = req.body;
-  // console.log(JSON.stringify(tag));
+
   var tag = req.params.tag;
   console.log(tag);
   Post.find({$text: {$search: tag }})
+    .sort('-created').populate('user', 'displayName')
     .exec(function(err,posts){
       if (err) {
         return res.status(400).send({
@@ -178,6 +178,20 @@ exports.listPostByTag = function (req, res) {
     });
 }
 
+//query post by category
+exports.listPostByCategory = function(req,res){
+  var categoryId = req.params.categoryId;
+  Post.find({category : categoryId})
+    .sort('-created').populate('user', 'displayName').exec(function(err, posts) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(posts);
+    }
+  });
+};
 
 /**
  * Post middleware
@@ -227,7 +241,7 @@ exports.listCategory = function (req, res) {
       res.jsonp(posts);
     }
   });
-}
+};
 
 exports.deleteCategory = function(req,res){
   var category = req.category ;

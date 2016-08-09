@@ -11,7 +11,10 @@ module.exports = function(app) {
   app.route('/api/posts').all(postsPolicy.isAllowed)
     .get(posts.list)
     .post(posts.create);
-
+  //query post by category
+  
+  app.route('/api/posts/categories/:categoryId')
+    .get(posts.listPostByCategory);
 
   app.route('/api/posts/:postId').all(postsPolicy.isAllowed)
     .get(posts.read)
@@ -21,12 +24,14 @@ module.exports = function(app) {
   app.route('/api/posts/:postId/comments')
     .post(posts.createComment)
 
+
   // Finish by binding the Post middleware
   app.param('postId', posts.postByID);
 
-  //  Search post by Tag
+  // Search post by Tag
   app.route('/api/posts/search/:tag')
     .post(posts.listPostByTag)
+
 
   //  add category
   app.route('/api/categories')
