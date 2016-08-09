@@ -122,7 +122,9 @@ exports.delete = function(req, res) {
  * List of Posts
  */
 exports.list = function(req, res) {
-  Post.find().sort('-created').populate('user', 'displayName').exec(function(err, posts) {
+  Post.find().sort('-created')
+    .populate('category')
+    .populate('user', 'displayName').exec(function(err, posts) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -166,7 +168,9 @@ exports.listPostByTag = function (req, res) {
   var tag = req.params.tag;
   console.log(tag);
   Post.find({$text: {$search: tag }})
-    .sort('-created').populate('user', 'displayName')
+    .sort('-created')
+    .populate('category')
+    .populate('user', 'displayName')
     .exec(function(err,posts){
       if (err) {
         return res.status(400).send({
@@ -182,7 +186,9 @@ exports.listPostByTag = function (req, res) {
 exports.listPostByCategory = function(req,res){
   var categoryId = req.params.categoryId;
   Post.find({category : categoryId})
-    .sort('-created').populate('user', 'displayName').exec(function(err, posts) {
+    .sort('-created')
+    .populate('category')
+    .populate('user', 'displayName').exec(function(err, posts) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -204,7 +210,9 @@ exports.postByID = function(req, res, next, id) {
     });
   }
 
-  Post.findById(id).populate('user', 'displayName').exec(function (err, post) {
+  Post.findById(id)
+    .populate('category')
+    .populate('user', 'displayName').exec(function (err, post) {
     if (err) {
       return next(err);
     } else if (!post) {

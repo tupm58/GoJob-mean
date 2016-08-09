@@ -9,9 +9,6 @@ var mongoose = require('mongoose'),
 var CategorySchema = new Schema({
   title: {
     type: String
-  },
-  menuKey: {
-    type: String
   }
 });
 
