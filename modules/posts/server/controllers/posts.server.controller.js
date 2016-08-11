@@ -26,8 +26,6 @@ exports.create = function(req, res) {
   upload(req, res,function (uploadError) {
     var post = new Post(req.body);
     post.user = req.user;
-   // post.category = req.category;
-   // ĐOẠN NÀY !
 
     if (uploadError){
       return res.status(400).send({
@@ -42,10 +40,9 @@ exports.create = function(req, res) {
               message: errorHandler.getErrorMessage(err)
             });
           } else {
-            //START
             var socketio = req.app.get('socketio');
             socketio.sockets.emit('post.created',post);
-            //END
+
             res.jsonp(post);
           }
         });
@@ -56,10 +53,9 @@ exports.create = function(req, res) {
               message: errorHandler.getErrorMessage(err)
             });
           } else {
-            //START
             var socketio = req.app.get('socketio');
             socketio.sockets.emit('post.created',post);
-            //END
+
             res.jsonp(post);
           }
         });
@@ -149,7 +145,6 @@ exports.createComment = function (req,res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-
         var socketio = req.app.get('socketio');
         socketio.sockets.emit('comment.created',post.comments);
         res.jsonp(post);

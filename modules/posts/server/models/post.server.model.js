@@ -28,8 +28,7 @@ var PostSchema = new Schema({
     ref: 'User'
   },
   postImageURL: {
-    type: String,
-    default: 'modules/users/client/img/profile/default.png'
+    type: String
   },
   comments: [{
     commentContent: String,

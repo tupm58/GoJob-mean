@@ -26,6 +26,12 @@
       if (!Socket.socket) {
         Socket.connect();
       }
+      Socket.on('load old msgs',function(docs){
+        for (var i = docs.length-1; i >= 0; i--) {
+         // displayMsg(docs[i].msg, docs[i].nick);
+          console.log(docs[i]);
+        }
+      });
 
       // Add an event listener to the 'chatMessage' event
       Socket.on('chatMessage', function (message) {

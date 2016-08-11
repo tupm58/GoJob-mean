@@ -11,8 +11,8 @@ module.exports = function(app) {
   app.route('/api/posts').all(postsPolicy.isAllowed)
     .get(posts.list)
     .post(posts.create);
+
   //query post by category
-  
   app.route('/api/posts/categories/:categoryId')
     .get(posts.listPostByCategory);
 

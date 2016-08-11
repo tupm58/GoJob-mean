@@ -1,7 +1,8 @@
 'use strict';
 var path = require('path'),
   mongoose = require('mongoose'),
-  Message = mongoose.model('Message');
+  Message = mongoose.model('Message'),
+  db = require('../controllers/chat.server.controller');
 // Create the chat configuration
 module.exports = function (io, socket) {
   // Emit the status event when a new socket client is connected
@@ -20,20 +21,19 @@ module.exports = function (io, socket) {
     message.profileImageURL = socket.request.user.profileImageURL;
     message.username = socket.request.user.username;
 
+    db.getOldMsgs(5,function (err, docs) {
+      io.emit('load old msgs',docs);
+      console.log(docs);
+    });
+    
     // Emit the 'chatMessage' event
     io.emit('chatMessage', message);
-    var chatMess = new Message();
-    chatMess.created = message.created;
-    chatMess.content = message.text;
-    chatMess.user = socket.request.user;
-    chatMess.save(function(err){
-      if (err){
-        console.log("fail");
-      }else{
-        console.log("save!")
-      }
+    db.saveMsg({
+      content: message.text,
+      user :  socket.request.user
+    },function(err){
+    });
 
-    })
   });
 
   // Emit the status event when a socket client is disconnected
