@@ -10,7 +10,8 @@ module.exports = function (app) {
   app.route('/api/users/accounts').delete(users.removeOAuthProvider);
   app.route('/api/users/password').post(users.changePassword);
   app.route('/api/users/picture').post(users.changeProfilePicture);
-   app.route('/api/users/detail/:username').get(users.userDetail);
+  app.route('/api/users/detail/:username').get(users.userDetail);
+  app.route('/api/users/:userId').get(users.userDetail);
   app.route('/api/users/message/:id').get(users.message);
   app.route('/api/users/messageHistory').get(users.messageHistory);
 

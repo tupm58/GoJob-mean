@@ -103,8 +103,14 @@ exports.me = function (req, res) {
 };
 exports.userDetail = function (req,res){
   var username = req.params.username;
+  var userId = req.params.userId;
+
   User.findOne({
-    username: username
+    // username: username
+      $or:[
+        {username: username},
+        {_id: userId}
+      ]
   }, '_id displayName username created profileImageURL ')
     .exec(function(err, user) {
     if (err){
