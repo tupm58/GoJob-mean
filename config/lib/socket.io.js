@@ -10,7 +10,8 @@ var config = require('../config'),
   passport = require('passport'),
   socketio = require('socket.io'),
   session = require('express-session'),
-  MongoStore = require('connect-mongo')(session);
+  MongoStore = require('connect-mongo')(session),
+  clients = [];
 
 // Define the Socket.io configuration method
 module.exports = function (app, db) {
@@ -68,8 +69,9 @@ module.exports = function (app, db) {
   }
   // Create a new Socket.io server
   var io = socketio.listen(server);
-  app.set('socketio',io);
-  app.set('server',server);
+  //cua Tu
+  // app.set('socketio',io);
+  // app.set('server',server);
 
   // Create a MongoDB storage object
   var mongoStore = new MongoStore({
@@ -113,6 +115,8 @@ module.exports = function (app, db) {
     config.files.server.sockets.forEach(function (socketConfiguration) {
       require(path.resolve(socketConfiguration))(io, socket);
     });
+    socket.request.user.socketId = socket.id;
+    socket.userId = socket.request.user._id;
   });
 
   return server;

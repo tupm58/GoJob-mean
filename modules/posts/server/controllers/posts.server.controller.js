@@ -11,8 +11,11 @@ var _ = require('lodash'),
 
   mongoose = require('mongoose'),
   Post = mongoose.model('Post'),
+  Notification = mongoose.model('Notification'),
   Category = mongoose.model('Category'),
+  db = require('../controllers/notification.server.controller'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+
 
 /**
  * Create a Post
@@ -55,7 +58,6 @@ exports.create = function(req, res) {
           } else {
             var socketio = req.app.get('socketio');
             socketio.sockets.emit('post.created',post);
-
             res.jsonp(post);
           }
         });
@@ -145,17 +147,28 @@ exports.createComment = function (req,res) {
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        var socketio = req.app.get('socketio');
-        socketio.sockets.emit('comment.created',post.comments);
+        var msg = comment.user.displayName + " da comment vao post: " + post.postContent;
+        var noti = new Notification({msg : msg});
+        noti.save(function (err) {
+          if (err){
+
+          }else{
+            var users = [];
+
+            // var socketio = req.app.get('socketio');
+            // console.log(noti);
+            // socketio.sockets.emit('comment.created',noti);
+            socketio.on('connection',function(socket){
+              socket.broadcast.to().emit('comment.created',noti);
+            });
+          }
+        });
         res.jsonp(post);
       }
     });
   })
 };
-//delete comment
-// exports.deleteComment = function (req, res) {
-//
-// }
+
 
 //search post by tag
 exports.listPostByTag = function (req, res) {
@@ -279,3 +292,22 @@ exports.categoryByID = function(req, res, next, id) {
     next();
   });
 };
+//get list user comment
+exports.getUserComment = function (req,res){
+  var postId = req.params.postId;
+  Post.findById(postId)
+    .populate('comments.user','displayName').exec(function (err, post) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      var data=[];
+      for (var i = 0; i < post.comments.length ;i++){
+        data.push(post.comments[i].user);
+      }
+      res.jsonp(data);
+     // console.log(data);
+    }
+  })
+}

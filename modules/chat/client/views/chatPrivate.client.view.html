@@ -1,0 +1,23 @@
+<h1>{{receiver.displayName}}</h1>
+<ul class="list-unstyled col-md-offset-4 col-md-8 messageContainer">
+  <!-- List all messages -->
+  <li class="col-xs-12 col-md-12 chat-message" ng-repeat="message in messages" ng-class="notMe(message.sender)?'other-message':'my-message'">
+    <small class="text-muted" ng-bind="message.created | date:'mediumTime'"></small>
+    <div class="chat-message-details">
+      <strong ng-bind="message.username"></strong>
+      <br>
+      <span ng-bind="message.text"></span>
+    </div>
+    <img ng-src="{{message.profileImageURL}}" alt="{{message.username}}" class="chat-profile-image"/>
+  </li>
+</ul>
+<form class="col-xs-12 col-md-offset-4 col-md-8" ng-submit="sendMessage();">
+  <fieldset class="row">
+    <div class="input-group">
+      <input type="text" id="messageText" autocomplete="off" name="messageText" class="form-control" ng-model="messageText" placeholder="Enter new message">
+      <span class="input-group-btn">
+          <button type="submit" class="btn btn-primary" ng-disabled="!messageText.length">Submit</button>
+        </span>
+    </div>
+  </fieldset>
+</form>

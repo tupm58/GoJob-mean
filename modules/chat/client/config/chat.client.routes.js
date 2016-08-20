@@ -13,11 +13,19 @@
         url: '/chat',
         templateUrl: 'modules/chat/client/views/chat.client.view.html',
         controller: 'ChatController',
-        controllerAs: 'vm',
+        // controllerAs: 'vm',
         data: {
           roles: ['user', 'admin'],
           pageTitle: 'Chat'
         }
+      })
+      .state('chat.private', {
+        url: '/:id',
+        templateUrl: 'modules/chat/client/views/chatPrivate.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        },
+        controller: 'ChatPrivateController'
       });
   }
 }());

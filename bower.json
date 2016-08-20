@@ -26,5 +26,8 @@
     "jquery": {
       "main": []
     }
+  },
+  "devDependencies": {
+    "livereload-js": "^2.2.1"
   }
 }

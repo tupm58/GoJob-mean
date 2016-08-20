@@ -18,13 +18,15 @@
     Socket.on('post.created', function(post) {
       console.log(post);
     });
-    Socket.on('comment.created', function(post) {
-      console.log(post.comments);
+    Socket.on('comment.created', function(noti) {
+      console.log(noti);
     });
     Socket.on('postCreateError', function (response) {
       vm.error = response.message;
     });
-
+    Socket.on('load old noti', function (noti) {
+      console.log(noti);
+    });
     Socket.on('postCreateSuccess', function (response) {
       if (vm.posts) {
         console.log("scoket!!!");
