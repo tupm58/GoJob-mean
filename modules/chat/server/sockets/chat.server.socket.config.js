@@ -7,6 +7,13 @@ var mongoose = require('mongoose'),
 var connectedMember = [];
 module.exports = function (io, socket) {
   // Emit the status event when a new socket client is connected
+  // io.emit('connected',{
+  //   type: 'status',
+  //   text: 'Is now connected',
+  //   created: Date.now(),
+  //   profileImageURL: socket.request.user.profileImageURL,
+  //   username: socket.request.user.username
+  // });
 
   io.emit('joined', {
     type: 'status',
@@ -72,6 +79,7 @@ module.exports = function (io, socket) {
     for(let temp in io.clients().sockets) {
       if (message.receiver == io.clients().sockets[temp].userId) {
         io.clients().sockets[temp].emit('chatMessage', message);
+        io.clients().sockets[temp].emit('privateMessage', message);
         console.log("1- emit " + message);
 
       }

@@ -75,7 +75,9 @@ exports.messageHistory = function (req, res) {
       var query = values.map(function(value){
         return value._id;
       });
-      User.find({_id: {$in: query}}).exec(function(err, users){
+      User.find({_id: {$in: query}},
+        '_id displayName username created profileImageURL '
+      ).exec(function(err, users){
         res.json(users);
       });
     }

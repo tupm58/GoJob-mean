@@ -18,6 +18,10 @@ angular.module('chat').controller('ChatController', ['$scope', '$location', 'Aut
     }
     Socket.emit('joinedSuccess');
 
+    Socket.on('privateMessage', function (message) {
+      console.log("có tin nhắn mới" + message.text + message.username);
+      $scope.messages.push(message);
+    });
 
     $scope.notMe = function(member){
       return member._id != user._id;

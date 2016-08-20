@@ -11,10 +11,10 @@ module.exports = function (app) {
   app.route('/api/users/password').post(users.changePassword);
   app.route('/api/users/picture').post(users.changeProfilePicture);
   app.route('/api/users/detail/:username').get(users.userDetail);
-  app.route('/api/users/:userId').get(users.userDetail);
+  app.route('/api/users/details/:userId').get(users.userDetail);
   app.route('/api/users/message/:id').get(users.message);
   app.route('/api/users/messageHistory').get(users.messageHistory);
-
+//  app.route('api/users/notification').get(users.notification);
 
   // Finish by binding the user middleware
   app.param('userId', users.userByID);

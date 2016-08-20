@@ -45,10 +45,10 @@ angular.module('chat').controller('ChatPrivateController', ['$scope', '$location
     }
 
     // Add an event listener to the 'chatMessage' event
-    Socket.on('privateMessage', function (message) {
-      console.log("huhu" + message);
-      $scope.messages.push(message);
-    });
+  //   Socket.on('privateMessage', function (message) {
+  //     console.log("huhu" + message);
+  //     $scope.messages.push(message);
+  // });
     // Private message
     Socket.on('chatMessage', function (message) {
       if(message.type=="message"){
