@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
 var NotificationSchema = new Schema({
-  msg: {
+  content: {
     type: String
   },
   created: {
@@ -18,7 +18,7 @@ var NotificationSchema = new Schema({
     type: Boolean,
     default: false
   },
-  to :{
+  receiveId: {
     type: Schema.ObjectId,
     ref: 'User'
   }

@@ -101,30 +101,30 @@ exports.changeProfilePicture = function (req, res) {
 exports.me = function (req, res) {
   res.json(req.user || null);
 };
-// exports.userDetail = function (req,res){
-//   var username = req.params.username;
-//   User.findOne({
-//     username: username
-//   }, '_id displayName username created profileImageURL ')
-//     .exec(function(err, user) {
-//     if (err){
-//       console.log(err);
-//     }else{
-//       res.json(user);
-//     }
-//   });
-// };
+exports.userDetail = function (req,res){
+  var username = req.params.username;
+  User.findOne({
+    username: username
+  }, '_id displayName username created profileImageURL ')
+    .exec(function(err, user) {
+    if (err){
+      console.log(err);
+    }else{
+      res.json(user);
+    }
+  });
+};
 /*
  * user middleware
  * */
-// exports.userByUsername = function(req, res, next, username) {
-//   User.findOne({
-//     username: username
-//   }, '_id displayName username created profileImageURL ')
-//     .exec(function(err, user) {
-//     if (err) return next(err);
-//     if (!user) return next(new Error('Failed to load User ' + username));
-//     req.user = user;
-//     next();
-//   });
-// };
+exports.userByUsername = function(req, res, next, username) {
+  User.findOne({
+    username: username
+  }, '_id displayName username created profileImageURL ')
+    .exec(function(err, user) {
+    if (err) return next(err);
+    if (!user) return next(new Error('Failed to load User ' + username));
+    req.user = user;
+    next();
+  });
+};

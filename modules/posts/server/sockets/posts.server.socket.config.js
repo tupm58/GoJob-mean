@@ -33,10 +33,5 @@ module.exports = function (io,socket) {
       }
     });
   });
-  // io.on('connection',function (noti) {
-  //   db.getOldMsgs(5,function (err, docs) {
-  //     socket.emit('load old noti',docs);
-  //     console.log(docs);
-  //   });
-  // })
+
 }
