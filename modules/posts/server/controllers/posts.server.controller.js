@@ -161,16 +161,8 @@ exports.createComment = function (req,res) {
           listUser.push(post.comments[i].user._id);
         }
         var listUserUnique = listUser.filter(function(value,index){
-          return listUser.indexOf(value) === index;
+          return listUser.indexOf(value) == index;
         });
-        var socketio = req.app.get('socketio');
-        for (let i = 0; i < listUserUnique.length ;i++){
-          for (let temp in socketio.clients().sockets) {
-            if (listUserUnique[i].toString() == socketio.clients().sockets[temp].request.user._id.toString()){
-              socketio.clients().sockets[temp].emit('comment.created', noti);
-            }
-          }
-        }
         for (let i = 0; i < listUserUnique.length ;i++){
             noti.receiveIds.push(listUserUnique[i]);
         }
@@ -179,6 +171,14 @@ exports.createComment = function (req,res) {
             console.log("err noti");
           }else{
             console.log(noti);
+                var socketio = req.app.get('socketio');
+                for (let i = 0; i < listUserUnique.length ;i++){
+                  for (let temp in socketio.clients().sockets) {
+                    if (listUserUnique[i].toString() == socketio.clients().sockets[temp].request.user._id.toString()){
+                      socketio.clients().sockets[temp].emit('comment.created', noti);
+                    }
+                  }
+                }
           }
         });
         res.jsonp(post);
