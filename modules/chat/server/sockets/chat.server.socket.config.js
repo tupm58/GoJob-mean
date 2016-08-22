@@ -77,11 +77,12 @@ module.exports = function (io, socket) {
     console.log(socket.request.user.socketId);
     console.log(socket.userId);
     for(let temp in io.clients().sockets) {
-      if (message.receiver == io.clients().sockets[temp].userId) {
+      if (message.receiver == io.clients().sockets[temp].userId
+        || socket.request.user._id.toString() == io.clients().sockets[temp].userId.toString()
+      ) {
         io.clients().sockets[temp].emit('chatMessage', message);
         io.clients().sockets[temp].emit('privateMessage', message);
         console.log("1- emit " + message);
-
       }
     }
     saveMessage(message, socket.request.user._id);

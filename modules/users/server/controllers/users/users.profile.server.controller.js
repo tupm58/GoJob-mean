@@ -134,3 +134,24 @@ exports.userByUsername = function(req, res, next, username) {
     next();
   });
 };
+exports.findUser = function(req,res){
+  var textSearch = req.body.textSearch;
+  var limit = req.body.limit || 10;
+  var skip = req.body.skip || 0;
+  var user = req.user;
+  if(!textSearch) return res.json([]);
+  var query = new RegExp(textSearch, 'i');
+  User.find({
+      // _id: {'$ne': user._id},
+      $or: [
+        { firstName: query },
+        { lastName: query },
+        { displayName: query }
+      ]
+    },'_id displayName username created profileImageURL ')
+    .limit(limit).skip(skip)
+    .exec(function(err, ids){
+      console.log(ids);
+      res.json(ids);
+    })
+};

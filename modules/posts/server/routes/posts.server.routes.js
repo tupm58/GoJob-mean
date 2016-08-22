@@ -24,9 +24,9 @@ module.exports = function(app) {
   app.route('/api/posts/:postId/comments')
     .post(posts.createComment)
 
-
-  app.route('/api/getUserComment/:postId')
-    .get(posts.getUserComment);
+  //
+  // app.route('/api/getUserComment/:postId')
+  //   .get(posts.getUserComment);
 
   // Finish by binding the Post middleware
   app.param('postId', posts.postByID);
@@ -46,6 +46,6 @@ module.exports = function(app) {
 
   // Finish by binding the Post middleware
   app.param('categoryId', posts.categoryByID);
-  
+
 
 };

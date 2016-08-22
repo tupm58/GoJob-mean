@@ -19,7 +19,8 @@
       console.log(post);
     });
     Socket.on('comment.created', function(noti) {
-      console.log(noti);
+        console.log(noti);
+      
     });
     Socket.on('postCreateError', function (response) {
       vm.error = response.message;

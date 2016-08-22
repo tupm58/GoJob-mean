@@ -139,28 +139,46 @@ exports.createComment = function (req,res) {
   var comment = req.body;
   comment.user = req.user;
 
-  Post.findById(postId,function (err,post) {
-    post.comments.push(comment);
-    post.save(function (err) {
+  Post.findById(postId)
+    .populate('user','_id')
+    .populate('comments.user', '_id displayName profileImageURL')
+    .exec(function(err, post) {
+      post.comments.push(comment);
+      post.save(function (err) {
       if (err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
-        var msg = comment.user.displayName + " da comment vao post: " + post.postContent;
-        var noti = new Notification({msg : msg});
-        noti.save(function (err) {
+         // socketio.sockets.emit('comment.created',noti);
+        //new
+        var noti = new Notification({
+          content:  comment.user.displayName + "đã cmt vào" + post.postContent
+        });
+        var listUser = [];
+        listUser.push(post.user._id);
+        for (let i = 0; i < post.comments.length ;i++) {
+          listUser.push(post.comments[i].user._id);
+        }
+        var listUserUnique = listUser.filter(function(value,index){
+          return listUser.indexOf(value) === index;
+        });
+        var socketio = req.app.get('socketio');
+        for (let i = 0; i < listUserUnique.length ;i++){
+          for (let temp in socketio.clients().sockets) {
+            if (listUserUnique[i].toString() == socketio.clients().sockets[temp].request.user._id.toString()){
+              socketio.clients().sockets[temp].emit('comment.created', noti);
+            }
+          }
+        }
+        for (let i = 0; i < listUserUnique.length ;i++){
+            noti.receiveIds.push(listUserUnique[i]);
+        }
+        noti.save(function (err,noti) {
           if (err){
-
+            console.log("err noti");
           }else{
-            var users = [];
-
-            // var socketio = req.app.get('socketio');
-            // console.log(noti);
-            // socketio.sockets.emit('comment.created',noti);
-            socketio.on('connection',function(socket){
-              socket.broadcast.to().emit('comment.created',noti);
-            });
+            console.log(noti);
           }
         });
         res.jsonp(post);
@@ -272,6 +290,7 @@ exports.deleteCategory = function(req,res){
     }
   });
 };
+
 exports.categoryByID = function(req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -292,22 +311,32 @@ exports.categoryByID = function(req, res, next, id) {
     next();
   });
 };
+
 //get list user comment
-exports.getUserComment = function (req,res){
-  var postId = req.params.postId;
+function getUserComment(postId){
   Post.findById(postId)
     .populate('comments.user','displayName').exec(function (err, post) {
     if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
+        console.log(err);
     } else {
       var data=[];
-      for (var i = 0; i < post.comments.length ;i++){
+      for (let i = 0; i < post.comments.length ;i++){
         data.push(post.comments[i].user);
       }
-      res.jsonp(data);
-     // console.log(data);
+      //console.log(data);
+      return data;
     }
-  })
-}
+  });
+};
+// function saveNotification(notification) {
+//
+//         var noti = new Notification({
+//             receiveId: message.receiver,
+//             content: message.text
+//         });
+//         mess.save(function(err, content){
+//           if(err) console.log(err);
+//           console.log(content);
+//         });
+//
+// }

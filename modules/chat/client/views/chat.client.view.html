@@ -19,8 +19,8 @@
     <div class="people history row" ui-sref=".private({id:'{{member._id}}'})" ng-repeat="member in historyMessage" ng-if="notOnline(member)">
       <img ng-src="{{member.profileImageURL}}" alt="admin" class="pull-left chat-profile-image"/>
       <div class="pull-left name-label chat-message-details">
-        <strong>{{member.firstName}}
-          {{member.lastName}}</strong>
+        <strong>{{member.displayName}}
+          </strong>
       </div>
     </div>
   </div>

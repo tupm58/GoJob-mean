@@ -41,7 +41,12 @@
       console.log(post);
     });
     //END
-    
+
+    //START
+    Socket.on('comment.created', function(noti) {
+      console.log("abc"+ noti.content);
+    });
+    //END
     // Cancel the upload process
     function cancelUpload() {
       vm.uploader.clearQueue();
