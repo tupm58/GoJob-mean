@@ -11,7 +11,8 @@ var mongoose = require('mongoose'),
 
 var PostSchema = new Schema({
   title: {
-    type: String
+    type: String,
+    required: 'Title cannot be blank'
   },
   postContent: {
     type: String,
@@ -28,7 +29,8 @@ var PostSchema = new Schema({
     ref: 'User'
   },
   postImageURL: {
-    type: String
+    type: String,
+    default : ''
   },
   comments: [{
     commentContent: String,
@@ -38,7 +40,10 @@ var PostSchema = new Schema({
     }
   }],
   tags: [{
-    word: String
+    word: {
+      type: String,
+      default: ''
+    }
   }],
   category:{
     type: Schema.ObjectId,
