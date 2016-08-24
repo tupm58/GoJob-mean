@@ -24,9 +24,13 @@ exports.notification = function(req,res){
         return res.status(400).send(err);
       }
       if(receiver){
-        Notification.aggregate({
-          $match: { 'receiveIds._id':{ $gte:receiver._id} }
-          })
+        Notification.aggregate([
+          {$match: { 'receiveIds._id':{ $gte:receiver._id} }},
+          {$project: {
+            content : '$content',
+          }}
+
+        ])
           .limit(30)
           .sort({created:-1})
           .exec(function(err,notifications){
