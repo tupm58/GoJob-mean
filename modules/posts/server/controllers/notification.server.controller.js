@@ -4,11 +4,11 @@ var path = require('path'),
   User = mongoose.model('User'),
   Notification = mongoose.model('Notification');
 
-exports.getOldNoti = function (limit,cb) {
+exports.getOldNoti = function (limit, cb) {
   Notification.find()
     .sort('-created')
     .limit(limit)
-    .exec(function(err, docs){
+    .exec(function (err, docs) {
       cb(err, docs);
     });
 }
@@ -21,21 +21,21 @@ exports.getOldNoti = function (limit,cb) {
 //     cb(err);
 //   });
 // }
-exports.saveNoti = function(notification,sendId){
-  User.findOne({_id: sendId},function(err,user){
-    if (err){
-      console.log("user error"+err);
+exports.saveNoti = function (notification, sendId) {
+  User.findOne({_id: sendId}, function (err, user) {
+    if (err) {
+      console.log("user error" + err);
     }
-    if (user){
+    if (user) {
       var noti = new Notification({
         sendId: sendId,
         content: notification.text
       });
       noti.receiveIds.push(notification.receiveId);
       noti.save(function (err, content) {
-        if (err){
+        if (err) {
           console.log(err);
-        }else{
+        } else {
           console.log(content);
         }
       })

@@ -19,7 +19,7 @@ var NotificationSchema = new Schema({
     default: false
   },
   receiveIds: [{
-    receiveId:{
+    receiveId: {
       type: Schema.ObjectId,
       ref: 'User'
     }

@@ -6,7 +6,7 @@
 var postsPolicy = require('../policies/posts.server.policy'),
   posts = require('../controllers/posts.server.controller');
 
-module.exports = function(app) {
+module.exports = function (app) {
   // Posts Routes
   app.route('/api/posts').all(postsPolicy.isAllowed)
     .get(posts.list)

@@ -19,10 +19,10 @@ module.exports = function (io, socket) {
     article.save(function (err) {
       if (err) {
         // Emit an error response event
-        io.emit('articleCreateError', { data: article, message: errorHandler.getErrorMessage(err) });
+        io.emit('articleCreateError', {data: article, message: errorHandler.getErrorMessage(err)});
       } else {
         // Emit a success response event
-        io.emit('articleCreateSuccess', { data: article, message: 'Article created' });
+        io.emit('articleCreateSuccess', {data: article, message: 'Article created'});
       }
     });
   });
@@ -35,21 +35,26 @@ module.exports = function (io, socket) {
     Article.findById(data._id).populate('user', 'displayName').exec(function (err, article) {
       if (err) {
         // Emit an error response event
-        io.emit('articleUpdateError', { data: data, message: errorHandler.getErrorMessage(err) });
+        io.emit('articleUpdateError', {data: data, message: errorHandler.getErrorMessage(err)});
       } else if (!article) {
         // Emit an error response event
-        io.emit('articleUpdateError', { data: data, message: 'No article with that identifier has been found' });
+        io.emit('articleUpdateError', {data: data, message: 'No article with that identifier has been found'});
       } else {
         article.title = data.title;
         article.content = data.content;
-        
+
         article.save(function (err) {
           if (err) {
             // Emit an error response event
-            io.emit('articleUpdateError', { data: data, message: errorHandler.getErrorMessage(err) });
+            io.emit('articleUpdateError', {data: data, message: errorHandler.getErrorMessage(err)});
           } else {
             // Emit a success response event
-            io.emit('articleUpdateSuccess', { data: article, updatedBy: user.displayName, updatedAt: new Date(Date.now()).toLocaleString(), message: 'Updated' });
+            io.emit('articleUpdateSuccess', {
+              data: article,
+              updatedBy: user.displayName,
+              updatedAt: new Date(Date.now()).toLocaleString(),
+              message: 'Updated'
+            });
           }
         });
       }

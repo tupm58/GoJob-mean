@@ -69,9 +69,9 @@ module.exports = function (app, db) {
   }
   // Create a new Socket.io server
   var io = socketio.listen(server);
-  //cua Tu
-  app.set('socketio',io);
-  app.set('server',server);
+  // cua Tu
+  app.set('socketio', io);
+  app.set('server', server);
 
   // Create a MongoDB storage object
   var mongoStore = new MongoStore({

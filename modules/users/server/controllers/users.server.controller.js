@@ -15,6 +15,4 @@ module.exports = _.extend(
   require('./users/users.profile.server.controller'),
   require('./users/users.message.server.controller'),
   require('./users/users.notification.server.controller')
-
-
 );

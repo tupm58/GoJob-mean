@@ -31,7 +31,7 @@ module.exports = {
   // Lusca config
   csrf: {
     csrf: false,
-    csp: { /* Content Security Policy object */},
+    csp: {/* Content Security Policy object */},
     xframe: 'SAMEORIGIN',
     p3p: 'ABCDEF',
     xssProtection: true
@@ -45,7 +45,7 @@ module.exports = {
         fileSize: 1 * 1024 * 1024 // Max file size in bytes (1 MB)
       }
     },
-    postUpload:{
+    postUpload: {
       dest: './modules/posts/client/img/post/uploads/', // Post upload destination path
       limits: {
         fileSize: 20 * 1024 * 1024 // Max file size in bytes (1 MB)

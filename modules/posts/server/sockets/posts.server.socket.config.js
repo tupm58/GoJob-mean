@@ -16,8 +16,8 @@ var _ = require('lodash'),
 /**
  * Create a Post
  */
-module.exports = function (io,socket) {
-  socket.on('postCreate',function (post) {
+module.exports = function (io, socket) {
+  socket.on('postCreate', function (post) {
     var user = socket.request.user;
 
     post = new Post(post);
@@ -26,10 +26,10 @@ module.exports = function (io,socket) {
     post.save(function (err) {
       if (err) {
         // Emit an error response event
-        io.emit('postCreateError', { data: post, message: errorHandler.getErrorMessage(err) });
+        io.emit('postCreateError', {data: post, message: errorHandler.getErrorMessage(err)});
       } else {
         // Emit a success response event
-        io.emit('postCreateSuccess', { data: post, message: 'post created' });
+        io.emit('postCreateSuccess', {data: post, message: 'post created'});
       }
     });
   });

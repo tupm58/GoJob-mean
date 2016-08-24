@@ -30,7 +30,7 @@ var PostSchema = new Schema({
   },
   postImageURL: {
     type: String,
-    default : ''
+    default: ''
   },
   comments: [{
     commentContent: String,
@@ -45,7 +45,7 @@ var PostSchema = new Schema({
       default: ''
     }
   }],
-  category:{
+  category: {
     type: Schema.ObjectId,
     ref: 'Category'
   }
