@@ -14,8 +14,8 @@ module.exports = {
     uri: process.env.MONGOHQ_URL ||'mongodb://phanminhtu:phanminhtu@ds013926.mlab.com:13926/gojob' || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean',
 
     options: {
-      user: 'liucuxiu',
-      pass: 'moclammiu'
+      user: 'phanminhtu',
+      pass: 'phanminhtu'
     },
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG || false
