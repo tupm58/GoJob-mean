@@ -16,7 +16,7 @@ module.exports = function (app) {
 
   app.route('/api/users/message/:id').get(users.message);
   app.route('/api/users/messageHistory').get(users.messageHistory);
-  app.route('/api/users/notification/:id').get(users.notification);
+  app.route('/api/users/notification').get(users.notification);
 
   app.route('/api/users/find').post(users.findUser);
 

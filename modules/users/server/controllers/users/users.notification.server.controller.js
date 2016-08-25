@@ -15,11 +15,12 @@ var _ = require('lodash'),
 
 exports.notification = function(req,res){
   var user = req.user;
+
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
-  var id = req.params.id;
+//  var id = req.params.id;
   if (user){
-    User.findOne({_id: id}).exec(function(err,receiver){
+    User.findOne({_id: user._id}).exec(function(err,receiver){
       if (err){
         return res.status(400).send(err);
       }
@@ -28,6 +29,7 @@ exports.notification = function(req,res){
           {$match: { 'receiveIds._id':{ $gte:receiver._id} }},
           {$project: {
             content : '$content',
+
           }}
 
         ])

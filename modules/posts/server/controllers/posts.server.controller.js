@@ -122,7 +122,9 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
   Post.find().sort('-created')
     .populate('category')
-    .populate('user', 'displayName').exec(function (err, posts) {
+    .populate('user', '_id displayName profileImageURL')
+    .populate('comments.user', '_id displayName profileImageURL')
+    .exec(function (err, posts) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -141,7 +143,7 @@ exports.createComment = function (req, res) {
 
   Post.findById(postId)
     .populate('user', '_id')
-    .populate('comments.user', '_id displayName profileImageURL')
+    .populate('comments.user', '_id displayName ')
     .exec(function (err, post) {
       post.comments.push(comment);
       post.save(function (err) {
@@ -196,7 +198,8 @@ exports.listPostByTag = function (req, res) {
   Post.find({$text: {$search: tag}})
     .sort('-created')
     .populate('category')
-    .populate('user', 'displayName')
+    .populate('user', '_id displayName profileImageURL')
+    .populate('comments.user', '_id displayName profileImageURL')
     .exec(function (err, posts) {
       if (err) {
         return res.status(400).send({
@@ -214,7 +217,9 @@ exports.listPostByCategory = function (req, res) {
   Post.find({category: categoryId})
     .sort('-created')
     .populate('category')
-    .populate('user', 'displayName').exec(function (err, posts) {
+    .populate('user', '_id displayName profileImageURL')
+    .populate('comments.user', '_id displayName profileImageURL')
+    .exec(function (err, posts) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -238,7 +243,9 @@ exports.postByID = function (req, res, next, id) {
 
   Post.findById(id)
     .populate('category')
-    .populate('user', 'displayName').exec(function (err, post) {
+    .populate('user', '_id displayName profileImageURL')
+    .populate('comments.user', '_id displayName profileImageURL')
+    .exec(function (err, post) {
     if (err) {
       return next(err);
     } else if (!post) {
@@ -312,31 +319,3 @@ exports.categoryByID = function (req, res, next, id) {
   });
 };
 
-//get list user comment
-function getUserComment(postId) {
-  Post.findById(postId)
-    .populate('comments.user', 'displayName').exec(function (err, post) {
-    if (err) {
-      console.log(err);
-    } else {
-      var data = [];
-      for (let i = 0; i < post.comments.length; i++) {
-        data.push(post.comments[i].user);
-      }
-      //console.log(data);
-      return data;
-    }
-  });
-};
-// function saveNotification(notification) {
-//
-//         var noti = new Notification({
-//             receiveId: message.receiver,
-//             content: message.text
-//         });
-//         mess.save(function(err, content){
-//           if(err) console.log(err);
-//           console.log(content);
-//         });
-//
-// }
