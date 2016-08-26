@@ -12,7 +12,7 @@ exports.getOldNoti = function (limit, cb) {
       cb(err, docs);
     });
 }
-
+//alo
 // exports.saveNoti = function (data,cb){
 //   var newNoti = new Notification({
 //     msg: "đã cmt vào "+ data.msg
