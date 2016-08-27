@@ -62,32 +62,30 @@ exports.messageHistory = function (req, res) {
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
   var id = req.params.id;
+  if (user) {
 
-  var cursor = Message.aggregate(
-    [
-      { $match: { sendId: user._id } },
-      { $group: { _id: "$receiveId" } },
-      { $sort: { created: -1 } },
-      { $limit: 10 },
-      { $skip: 0 }
-    ],
-    function (err, values) {
-      var query = values.map(function(value){
-        return value._id;
-      });
-      if(user){
+    var cursor = Message.aggregate(
+      [
+        {$match: {sendId: user._id}},
+        {$group: {_id: "$receiveId"}},
+        {$sort: {created: -1}},
+        {$limit: 10},
+        {$skip: 0}
+      ],
+      function (err, values) {
+        var query = values.map(function (value) {
+          return value._id;
+        });
         User.find({_id: {$in: query}},
           '_id displayName username created profileImageURL '
-        ).exec(function(err, users){
+        ).exec(function (err, users) {
           res.json(users);
         });
-      }else{
-        res.status(400).send({
-          message: 'User is not signed in'
-        });
       }
-     
-    }
-  )
-
+    )
+  }else{
+    res.status(400).send({
+      message: 'User is not signed in'
+    });
+  }
 };
