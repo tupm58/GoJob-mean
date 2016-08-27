@@ -75,11 +75,18 @@ exports.messageHistory = function (req, res) {
       var query = values.map(function(value){
         return value._id;
       });
-      User.find({_id: {$in: query}},
-        '_id displayName username created profileImageURL '
-      ).exec(function(err, users){
-        res.json(users);
-      });
+      if(user){
+        User.find({_id: {$in: query}},
+          '_id displayName username created profileImageURL '
+        ).exec(function(err, users){
+          res.json(users);
+        });
+      }else{
+        res.status(400).send({
+          message: 'User is not signed in'
+        });
+      }
+     
     }
   )
 
