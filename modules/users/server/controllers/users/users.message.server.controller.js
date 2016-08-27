@@ -60,7 +60,7 @@ exports.messageHistory = function (req, res) {
   var user = req.user;
 
   // For security measurement we remove the roles from the req.body object
- // delete req.body.roles;
+  delete req.body.roles;
   var id = req.params.id;
 
   var cursor = Message.aggregate(
