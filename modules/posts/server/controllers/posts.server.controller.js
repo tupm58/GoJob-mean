@@ -155,7 +155,8 @@ exports.createComment = function (req, res) {
           // socketio.sockets.emit('comment.created',noti);
           //new
           var noti = new Notification({
-            content: comment.user.displayName + "đã cmt vào" + post.postContent
+            content: comment.user.displayName + "đã cmt vào" + post.postContent,
+            postId : postId
           });
           var listUser = [];
           listUser.push(post.user._id);

@@ -18,6 +18,10 @@ var NotificationSchema = new Schema({
     type: Boolean,
     default: false
   },
+  postId: {
+    type: Schema.ObjectId,
+    ref: 'Post'
+  },
   receiveIds: [{
     receiveId: {
       type: Schema.ObjectId,
