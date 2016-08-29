@@ -86,7 +86,7 @@ module.exports = function (io, socket) {
       }
     }
     saveMessage(message, socket.request.user._id);
-    socket.emit('chatMessage', message);
+   // socket.emit('chatMessage', message);
     console.log("2- emit " + message);
     // Emit the 'chatMessage' event
   });

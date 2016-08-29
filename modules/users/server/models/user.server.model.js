@@ -66,6 +66,10 @@ var UserSchema = new Schema({
     type: String,
     default: ''
   },
+  description:{
+    type: String,
+    default: ''
+  },
   salt: {
     type: String
   },

@@ -58,7 +58,7 @@ angular.module('chat').controller('ChatPrivateController', ['$scope', '$location
           (message.sender == user._id && message.receiver == $state.params.id)
         )
           $scope.messages.push(message);
-        console.log("alo"+message.text);
+        console.log(message);
       } else {
         $scope.messages.push(message);
       }

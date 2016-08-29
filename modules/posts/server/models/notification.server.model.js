@@ -14,10 +14,6 @@ var NotificationSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  seen: {
-    type: Boolean,
-    default: false
-  },
   postId: {
     type: Schema.ObjectId,
     ref: 'Post'
@@ -26,6 +22,10 @@ var NotificationSchema = new Schema({
     receiveId: {
       type: Schema.ObjectId,
       ref: 'User'
+    },
+    seen: {
+      type: Boolean,
+      default: false
     }
   }]
 });

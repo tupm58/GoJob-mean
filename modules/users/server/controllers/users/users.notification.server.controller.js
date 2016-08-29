@@ -26,7 +26,7 @@ exports.notification = function(req,res){
       }
       if(receiver){
         Notification.aggregate([
-          {$match: { 'receiveIds._id':{ $gte:receiver._id} }},
+          {$match: { 'receiveIds._id': receiver._id }},
           {$project: {
             content : '$content',
 
