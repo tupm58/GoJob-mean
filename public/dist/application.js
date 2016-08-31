@@ -491,7 +491,8 @@ angular.module('chat').controller('ChatController', ['$scope', '$location', 'Aut
     Socket.emit('joinedSuccess');
 
     Socket.on('privateMessage', function (message) {
-      console.log("có tin nhắn mới" + message.text + message.username);
+      console.log(" có tin nhắn mới " + message.text + " "  + message.username);
+      console.log("id" + message.sender);
       $scope.messages.push(message);
     });
 
@@ -591,7 +592,7 @@ angular.module('chat').controller('ChatPrivateController', ['$scope', '$location
           (message.sender == user._id && message.receiver == $state.params.id)
         )
           $scope.messages.push(message);
-        console.log("alo"+message.text);
+        console.log(message);
       } else {
         $scope.messages.push(message);
       }
