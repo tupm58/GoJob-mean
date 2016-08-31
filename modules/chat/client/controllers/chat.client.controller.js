@@ -20,7 +20,7 @@ angular.module('chat').controller('ChatController', ['$scope', '$location', 'Aut
 
     Socket.on('privateMessage', function (message) {
       console.log(" có tin nhắn mới " + message.text + " "  + message.username);
-      console.log(message.sender);
+      console.log("id" + message.sender);
       $scope.messages.push(message);
     });
 
