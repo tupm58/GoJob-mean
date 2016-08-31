@@ -90,23 +90,26 @@ module.exports = function (io, socket) {
     console.log("2- emit " + message);
     // Emit the 'chatMessage' event
   });
+  // socket.on('seen',function (message) {
+  //
+  // });
 };
-function saveMessage(message, sendId){
-  User.findOne({_id: sendId},function(err, user){
-    if(err) {
-      console.log('user error');
-      console.log(err);
-    }
-    if(user){
-      var mess = new Message({
-        sendId: sendId,
-        receiveId: message.receiver,
-        content: message.text
-      });
-      mess.save(function(err, content){
-        if(err) console.log(err);
-          console.log(content);
-      });
-    }
-  });
-}
+  function saveMessage(message, sendId){
+    User.findOne({_id: sendId},function(err, user){
+      if(err) {
+        console.log('user error');
+        console.log(err);
+      }
+      if(user){
+        var mess = new Message({
+          sendId: sendId,
+          receiveId: message.receiver,
+          content: message.text
+        });
+        mess.save(function(err, content){
+          if(err) console.log(err);
+            console.log(content);
+        });
+      }
+    });
+  }
