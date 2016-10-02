@@ -69,7 +69,7 @@ exports.messageHistory = function (req, res) {
         {$match: {sendId: user._id}},
         {$group: {_id: "$receiveId"}},
         {$sort: {created: -1}},
-        {$limit: 10},
+        {$limit: 100},
         {$skip: 0}
       ],
       function (err, values) {
