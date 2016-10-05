@@ -13,42 +13,50 @@ var _ = require('lodash'),
   User = mongoose.model('User'),
   Message = mongoose.model('Message');
 
-exports.message = function(req,res){
+exports.message = function (req, res) {
   var user = req.user;
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
   var id = req.params.id;
-  if (user){
-    User.findOne({_id: id}).exec(function(err,receiver){
-      if (err){
+  var time = req.query.time;
+  if (user) {
+    User.findOne({_id: id}).exec(function (err, receiver) {
+      if (err) {
         return res.status(400).send(err);
       }
-      if(receiver){
-        Message.find({
-          $or:[
+      if (receiver) {
+        var query = {
+          $or: [
             {sendId: receiver._id, receiveId: user._id},
             {receiveId: receiver._id, sendId: user._id}
           ]
-        })
-          .limit(30)
-          .sort({created:-1})
-          .exec(function(err,messages){
-            if(err){
+        }
+        if (time){
+          query.created = {
+            $lt: new Date(time)
+          };
+        }
+        console.log(query);
+        Message.find(query)
+          .limit(10)
+          .sort({created: -1})
+          .exec(function (err, messages) {
+            if (err) {
               return res.status(400).send(err);
-            }else{
+            } else {
               res.json({
                 receiver: receiver,
                 messages: messages
               });
             }
           });
-      }else{
+      } else {
         res.status(400).send({
           message: 'User not found'
         });
       }
     });
-  }else{
+  } else {
     res.status(400).send({
       message: 'User is not signed in'
     });
@@ -83,7 +91,7 @@ exports.messageHistory = function (req, res) {
         });
       }
     )
-  }else{
+  } else {
     res.status(400).send({
       message: 'User is not signed in'
     });
