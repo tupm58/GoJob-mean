@@ -100,9 +100,27 @@
 (function (app) {
   'use strict';
 
+  app.registerModule('exams');
+})(ApplicationConfiguration);
+
+(function (app) {
+  'use strict';
+
+  app.registerModule('heros');
+})(ApplicationConfiguration);
+
+(function (app) {
+  'use strict';
+
   app.registerModule('posts');
   // app.registerModule('posts.services');
   // app.registerModule('posts.routes', ['ui.router', 'posts.services']);
+})(ApplicationConfiguration);
+
+(function (app) {
+  'use strict';
+
+  app.registerModule('questions');
 })(ApplicationConfiguration);
 
 (function (app) {
@@ -1487,6 +1505,348 @@ angular.module('chat').controller('ChatPrivateController', ['$scope', '$location
   'use strict';
 
   angular
+    .module('exams')
+    .config(routeConfig);
+
+  routeConfig.$inject = ['$stateProvider'];
+
+  function routeConfig($stateProvider) {
+    $stateProvider
+      .state('exams', {
+        abstract: true,
+        url: '/exams',
+        template: '<ui-view/>'
+      })
+      .state('exams.list', {
+        url: '',
+        templateUrl: 'modules/exams/client/views/list-exams.client.view.html',
+        controller: 'ExamsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Exams List'
+        }
+      })
+      .state('exams.create', {
+        url: '/create',
+        templateUrl: 'modules/exams/client/views/form-exam.client.view.html',
+        controller: 'ExamsController',
+        controllerAs: 'vm',
+        resolve: {
+          examResolve: newExam
+        },
+        data: {
+          roles: ['user', 'admin'],
+          pageTitle : 'Exams Create'
+        }
+      })
+      .state('exams.edit', {
+        url: '/:examId/edit',
+        templateUrl: 'modules/exams/client/views/form-exam.client.view.html',
+        controller: 'ExamsController',
+        controllerAs: 'vm',
+        resolve: {
+          examResolve: getExam
+        },
+        data: {
+          roles: ['user', 'admin'],
+          pageTitle: 'Edit Exam {{ examResolve.name }}'
+        }
+      })
+      .state('exams.view', {
+        url: '/:examId',
+        templateUrl: 'modules/exams/client/views/view-exam.client.view.html',
+        controller: 'ExamsController',
+        controllerAs: 'vm',
+        resolve: {
+          examResolve: getExam
+        },
+        data:{
+          pageTitle: 'Exam {{ articleResolve.name }}'
+        }
+      });
+  }
+
+  getExam.$inject = ['$stateParams', 'ExamsService'];
+
+  function getExam($stateParams, ExamsService) {
+    return ExamsService.get({
+      examId: $stateParams.examId
+    }).$promise;
+  }
+
+  newExam.$inject = ['ExamsService'];
+
+  function newExam(ExamsService) {
+    return new ExamsService();
+  }
+})();
+
+(function () {
+  'use strict';
+
+  // Exams controller
+  angular
+    .module('exams')
+    .controller('ExamsController', ExamsController);
+
+  ExamsController.$inject = ['$scope', '$state', 'Authentication', 'examResolve'];
+
+  function ExamsController ($scope, $state, Authentication, exam) {
+    var vm = this;
+
+    vm.authentication = Authentication;
+    vm.exam = exam;
+    vm.error = null;
+    vm.form = {};
+    vm.remove = remove;
+    vm.save = save;
+
+    // Remove existing Exam
+    function remove() {
+      if (confirm('Are you sure you want to delete?')) {
+        vm.exam.$remove($state.go('exams.list'));
+      }
+    }
+
+    // Save Exam
+    function save(isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.examForm');
+        return false;
+      }
+
+      // TODO: move create/update logic to service
+      if (vm.exam._id) {
+        vm.exam.$update(successCallback, errorCallback);
+      } else {
+        vm.exam.$save(successCallback, errorCallback);
+      }
+
+      function successCallback(res) {
+        $state.go('exams.view', {
+          examId: res._id
+        });
+      }
+
+      function errorCallback(res) {
+        vm.error = res.data.message;
+      }
+    }
+  }
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('exams')
+    .controller('ExamsListController', ExamsListController);
+
+  ExamsListController.$inject = ['ExamsService'];
+
+  function ExamsListController(ExamsService) {
+    var vm = this;
+
+    vm.exams = ExamsService.query();
+  }
+})();
+
+//Exams service used to communicate Exams REST endpoints
+(function () {
+  'use strict';
+
+  angular
+    .module('exams')
+    .factory('ExamsService', ExamsService);
+
+  ExamsService.$inject = ['$resource'];
+
+  function ExamsService($resource) {
+    return $resource('api/exams/:examId', {
+      examId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('heros')
+    .config(routeConfig);
+
+  routeConfig.$inject = ['$stateProvider'];
+
+  function routeConfig($stateProvider) {
+    $stateProvider
+      .state('heros', {
+        abstract: true,
+        url: '/heros',
+        template: '<ui-view/>'
+      })
+      .state('heros.list', {
+        url: '',
+        templateUrl: 'modules/heros/client/views/list-heros.client.view.html',
+        controller: 'HerosListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Heros List'
+        }
+      })
+      .state('heros.create', {
+        url: '/create',
+        templateUrl: 'modules/heros/client/views/form-hero.client.view.html',
+        controller: 'HerosController',
+        controllerAs: 'vm',
+        resolve: {
+          heroResolve: newHero
+        },
+        data: {
+          roles: ['user', 'admin'],
+          pageTitle : 'Heros Create'
+        }
+      })
+      .state('heros.edit', {
+        url: '/:heroId/edit',
+        templateUrl: 'modules/heros/client/views/form-hero.client.view.html',
+        controller: 'HerosController',
+        controllerAs: 'vm',
+        resolve: {
+          heroResolve: getHero
+        },
+        data: {
+          roles: ['user', 'admin'],
+          pageTitle: 'Edit Hero {{ heroResolve.name }}'
+        }
+      })
+      .state('heros.view', {
+        url: '/:heroId',
+        templateUrl: 'modules/heros/client/views/view-hero.client.view.html',
+        controller: 'HerosController',
+        controllerAs: 'vm',
+        resolve: {
+          heroResolve: getHero
+        },
+        data:{
+          pageTitle: 'Hero {{ articleResolve.name }}'
+        }
+      });
+  }
+
+  getHero.$inject = ['$stateParams', 'HerosService'];
+
+  function getHero($stateParams, HerosService) {
+    return HerosService.get({
+      heroId: $stateParams.heroId
+    }).$promise;
+  }
+
+  newHero.$inject = ['HerosService'];
+
+  function newHero(HerosService) {
+    return new HerosService();
+  }
+})();
+
+(function () {
+  'use strict';
+
+  // Heros controller
+  angular
+    .module('heros')
+    .controller('HerosController', HerosController);
+
+  HerosController.$inject = ['$scope', '$state', 'Authentication', 'heroResolve'];
+
+  function HerosController ($scope, $state, Authentication, hero) {
+    var vm = this;
+
+    vm.authentication = Authentication;
+    vm.hero = hero;
+    vm.error = null;
+    vm.form = {};
+    vm.remove = remove;
+    vm.save = save;
+
+    // Remove existing Hero
+    function remove() {
+      if (confirm('Are you sure you want to delete?')) {
+        vm.hero.$remove($state.go('heros.list'));
+      }
+    }
+
+    // Save Hero
+    function save(isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.heroForm');
+        return false;
+      }
+
+      // TODO: move create/update logic to service
+      if (vm.hero._id) {
+        vm.hero.$update(successCallback, errorCallback);
+      } else {
+        vm.hero.$save(successCallback, errorCallback);
+      }
+
+      function successCallback(res) {
+        $state.go('heros.view', {
+          heroId: res._id
+        });
+      }
+
+      function errorCallback(res) {
+        vm.error = res.data.message;
+      }
+    }
+  }
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('heros')
+    .controller('HerosListController', HerosListController);
+
+  HerosListController.$inject = ['HerosService'];
+
+  function HerosListController(HerosService) {
+    var vm = this;
+
+    vm.heros = HerosService.query();
+  }
+})();
+
+//Heros service used to communicate Heros REST endpoints
+(function () {
+  'use strict';
+
+  angular
+    .module('heros')
+    .factory('HerosService', HerosService);
+
+  HerosService.$inject = ['$resource'];
+
+  function HerosService($resource) {
+    return $resource('api/heros/:heroId', {
+      heroId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+})();
+
+(function () {
+  'use strict';
+
+  angular
     .module('posts')
     .run(menuConfig);
 
@@ -1741,6 +2101,177 @@ angular.module('chat').controller('ChatPrivateController', ['$scope', '$location
   function PostsService($resource) {
     return $resource('api/posts/:postId', {
       postId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('questions')
+    .config(routeConfig);
+
+  routeConfig.$inject = ['$stateProvider'];
+
+  function routeConfig($stateProvider) {
+    $stateProvider
+      .state('questions', {
+        abstract: true,
+        url: '/questions',
+        template: '<ui-view/>'
+      })
+      .state('questions.list', {
+        url: '',
+        templateUrl: 'modules/questions/client/views/list-questions.client.view.html',
+        controller: 'QuestionsListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Questions List'
+        }
+      })
+      .state('questions.create', {
+        url: '/create',
+        templateUrl: 'modules/questions/client/views/form-question.client.view.html',
+        controller: 'QuestionsController',
+        controllerAs: 'vm',
+        resolve: {
+          questionResolve: newQuestion
+        },
+        data: {
+          roles: ['user', 'admin'],
+          pageTitle : 'Questions Create'
+        }
+      })
+      .state('questions.edit', {
+        url: '/:questionId/edit',
+        templateUrl: 'modules/questions/client/views/form-question.client.view.html',
+        controller: 'QuestionsController',
+        controllerAs: 'vm',
+        resolve: {
+          questionResolve: getQuestion
+        },
+        data: {
+          roles: ['user', 'admin'],
+          pageTitle: 'Edit Question {{ questionResolve.name }}'
+        }
+      })
+      .state('questions.view', {
+        url: '/:questionId',
+        templateUrl: 'modules/questions/client/views/view-question.client.view.html',
+        controller: 'QuestionsController',
+        controllerAs: 'vm',
+        resolve: {
+          questionResolve: getQuestion
+        },
+        data:{
+          pageTitle: 'Question {{ articleResolve.name }}'
+        }
+      });
+  }
+
+  getQuestion.$inject = ['$stateParams', 'QuestionsService'];
+
+  function getQuestion($stateParams, QuestionsService) {
+    return QuestionsService.get({
+      questionId: $stateParams.questionId
+    }).$promise;
+  }
+
+  newQuestion.$inject = ['QuestionsService'];
+
+  function newQuestion(QuestionsService) {
+    return new QuestionsService();
+  }
+})();
+
+(function () {
+  'use strict';
+
+  angular
+    .module('questions')
+    .controller('QuestionsListController', QuestionsListController);
+
+  QuestionsListController.$inject = ['QuestionsService'];
+
+  function QuestionsListController(QuestionsService) {
+    var vm = this;
+
+    vm.questions = QuestionsService.query();
+  }
+})();
+
+(function () {
+  'use strict';
+
+  // Questions controller
+  angular
+    .module('questions')
+    .controller('QuestionsController', QuestionsController);
+
+  QuestionsController.$inject = ['$scope', '$state', 'Authentication', 'questionResolve'];
+
+  function QuestionsController ($scope, $state, Authentication, question) {
+    var vm = this;
+
+    vm.authentication = Authentication;
+    vm.question = question;
+    vm.error = null;
+    vm.form = {};
+    vm.remove = remove;
+    vm.save = save;
+
+    // Remove existing Question
+    function remove() {
+      if (confirm('Are you sure you want to delete?')) {
+        vm.question.$remove($state.go('questions.list'));
+      }
+    }
+
+    // Save Question
+    function save(isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.questionForm');
+        return false;
+      }
+
+      // TODO: move create/update logic to service
+      if (vm.question._id) {
+        vm.question.$update(successCallback, errorCallback);
+      } else {
+        vm.question.$save(successCallback, errorCallback);
+      }
+
+      function successCallback(res) {
+        $state.go('questions.view', {
+          questionId: res._id
+        });
+      }
+
+      function errorCallback(res) {
+        vm.error = res.data.message;
+      }
+    }
+  }
+})();
+
+//Questions service used to communicate Questions REST endpoints
+(function () {
+  'use strict';
+
+  angular
+    .module('questions')
+    .factory('QuestionsService', QuestionsService);
+
+  QuestionsService.$inject = ['$resource'];
+
+  function QuestionsService($resource) {
+    return $resource('api/questions/:questionId', {
+      questionId: '@_id'
     }, {
       update: {
         method: 'PUT'
