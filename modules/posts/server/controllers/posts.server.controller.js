@@ -121,7 +121,7 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
   Post.find().sort('-created')
-    .populate('category')
+    .populate('category','_id title')
     .populate('user', '_id displayName profileImageURL')
     .populate('comments.user', '_id displayName profileImageURL')
     .exec(function (err, posts) {
@@ -198,7 +198,7 @@ exports.listPostByTag = function (req, res) {
   console.log(tag);
   Post.find({$text: {$search: tag}})
     .sort('-created')
-    .populate('category')
+    .populate('category','_id title')
     .populate('user', '_id displayName profileImageURL')
     .populate('comments.user', '_id displayName profileImageURL')
     .exec(function (err, posts) {
@@ -243,7 +243,7 @@ exports.postByID = function (req, res, next, id) {
   }
 
   Post.findById(id)
-    .populate('category')
+    .populate('category','_id title')
     .populate('user', '_id displayName profileImageURL')
     .populate('comments.user', '_id displayName profileImageURL')
     .exec(function (err, post) {
